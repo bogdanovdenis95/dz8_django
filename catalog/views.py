@@ -39,7 +39,7 @@ class HomeView(ListView):
         # Добавляем информацию о праве редактирования и удаления
         user = self.request.user
         if user.is_authenticated:
-            context['can_edit_or_delete'] = user.groups.filter(name='Модераторы').exists()
+            context['can_edit_or_delete'] = user.groups.filter(name='Moderator').exists()
         else:
             context['can_edit_or_delete'] = False
 
@@ -84,7 +84,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not request.user.is_superuser and not request.user.groups.filter(name='Модераторы').exists():
+        if not request.user.is_superuser and not request.user.groups.filter(name='Moderator').exists():
             if self.object.owner != request.user:
                 return HttpResponseForbidden("У вас нет прав доступа к редактированию этого продукта.")
         return super().dispatch(request, *args, **kwargs)
@@ -133,7 +133,7 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if not request.user.is_superuser and not request.user.groups.filter(name='Модераторы').exists():
+        if not request.user.is_superuser and not request.user.groups.filter(name='Moderator').exists():
             if self.object.owner != request.user:
                 return HttpResponseForbidden("У вас нет прав доступа к удалению этого продукта.")
         return super().dispatch(request, *args, **kwargs)
